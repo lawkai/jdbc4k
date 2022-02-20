@@ -1,0 +1,33 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+default_stages: [ commit-msg ]
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.1.0
+    hooks:
+      - id: check-added-large-files
+      - id: pretty-format-json
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: check-yaml
+      - id: detect-private-key
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v1.0.0
+    hooks:
+      - id: conventional-pre-commit
+
+  - repo: https://github.com/jguttman94/pre-commit-gradle
+    rev: v0.3.0
+    hooks:
+      - id: gradle-spotless
+        args: [ '-w', '-o' ]
+
+  - repo: https://github.com/jguttman94/pre-commit-gradle
+    rev: v0.3.0
+    hooks:
+      - id: gradle-check
+        args: [ '-w', '-o' ]
+        stages: [ push ]
