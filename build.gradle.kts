@@ -16,6 +16,9 @@ repositories {
 val kotlinx_version = "1.6.0"
 val slf4j_version = "1.7.36"
 val logback_version = "1.2.10"
+val hikari_version = "5.0.1"
+val hsqldb_version = "2.6.1"
+val hamkrest_version = "2.2"
 
 dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
@@ -25,12 +28,18 @@ dependencies {
     implementation(platform("org.jetbrains.kotlinx:kotlinx-coroutines-bom:$kotlinx_version"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
 
+    // logging
+    implementation("org.slf4j:slf4j-api:$slf4j_version")
+
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 
-    // logging
-    implementation("org.slf4j:slf4j-api:$slf4j_version")
     testRuntimeOnly("ch.qos.logback:logback-classic:$logback_version")
+
+    testImplementation("com.zaxxer:HikariCP:$hikari_version")
+    testImplementation("org.hsqldb:hsqldb:$hsqldb_version")
+
+    testImplementation("org.hamcrest:hamcrest:$hamkrest_version")
 }
 
 tasks.test {
@@ -54,8 +63,6 @@ spotless {
                 "ij_continuation_indent_size" to "4",
             ),
         )
-        // configure in diktat-analysis.yml
-        diktat()
         trimTrailingWhitespace()
     }
     kotlinGradle {
