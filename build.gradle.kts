@@ -2,7 +2,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.6.10"
-    application
     id("com.gorylenko.gradle-git-properties") version "2.3.1"
     id("com.diffplug.spotless") version "6.2.1"
 }
@@ -11,6 +10,10 @@ group = "com.github.lawkai"
 
 repositories {
     mavenCentral()
+}
+
+kotlin.sourceSets.test {
+    languageSettings.optIn("kotlinx.coroutines.ExperimentalCoroutinesApi")
 }
 
 val kotlinx_version = "1.6.0"
@@ -48,10 +51,6 @@ tasks.test {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "11"
-}
-
-application {
-    mainClass.set("MainKt")
 }
 
 spotless {

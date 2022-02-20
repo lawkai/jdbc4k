@@ -153,6 +153,34 @@ internal class DataSource4kTest {
         assertThat(personDAO.countPersons(), equalTo(count * 2 - 1))
     }
 
+    @Test
+    @DisplayName("After insert it should be able to query records as List.")
+    fun testLoadAllPersonsAsList() = runBlocking {
+        db.transaction {
+            personDAO.insert(Person("Donald", "Trump"))
+            personDAO.insert(Person("Joe", "Biden"))
+            personDAO.insert(Person("Hillary", "Clinton"))
+        }
+        assertThat(personDAO.loadAllPersons().size, equalTo(3))
+    }
+
+    @Test
+    @DisplayName("After insert it should be able to query records as Sequence.")
+    fun testLoadAllPersonsAsSequence() = runBlocking {
+        (1..1000).map { i ->
+            personDAO.insert(Person("Donald_$i", "Trump"))
+            personDAO.insert(Person("Joe_$i", "Biden"))
+            personDAO.insert(Person("Hillary_$i", "Clinton"))
+        }
+        val allDonalds = personDAO.loadAllPersonsAsSequence()
+            .filter { it.firstName.startsWith("Donald") }
+            .take(30000)
+            .onEach {
+                println(it)
+            }.toList()
+        assertThat(allDonalds.size, equalTo(1000))
+    }
+
     companion object {
         val dataSource = HikariDataSource(
             HikariConfig().apply {
