@@ -8,6 +8,7 @@ import kotlinx.coroutines.coroutineScope
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import java.sql.Connection
+import java.sql.PreparedStatement
 import javax.sql.DataSource
 import kotlin.coroutines.AbstractCoroutineContextElement
 import kotlin.coroutines.CoroutineContext
@@ -16,9 +17,8 @@ import kotlin.coroutines.coroutineContext
 /**
  * [DataSource4k] provides suspendable [transaction] and [query] function which allows queries to be run asynchronously.
  *
- * This class uses [limitedParallelism](kotlinx.coroutines.CoroutineDispatcher.limitedParallelism)
- * which is an [ExperimentalCoroutinesApi](kotlinx.coroutines.ExperimentalCoroutinesApi)
- * as of `org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0`.
+ * This class uses [limitedParallelism](kotlinx.coroutines.CoroutineDispatcher.limitedParallelism) which is an
+ * [ExperimentalCoroutinesApi] as of `org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0`.
  *
  * Using this class will require setting compiler flag '-opt-in=kotlin.RequiresOptIn'.
  *
@@ -29,11 +29,10 @@ import kotlin.coroutines.coroutineContext
  * }
  * ```
  *
- * @param dataSource the [DataSource](javax.sql.DataSource) to use.
- * @param parallelFactor controls how many threads can be run in parallel against the
- *     [DataSource](javax.sql.DataSource). Note this factor should not be higher than the
- *     number of connections can be provided by the [dataSource]. (ex: if [dataSource]
- *     can handle 10 connections at most, [parallelFactor] should be set at 10 or below.)
+ * @param dataSource the [DataSource] to use.
+ * @param parallelFactor controls how many threads can be run in parallel against the [DataSource]. Note this factor
+ *     should not be higher than the number of connections can be provided by the [dataSource]. (ex: if
+ *     [dataSource] can handle 10 connections at most, [parallelFactor] should be set at 10 or below.)
  * @param name _Optional_ used to give the [Logger](org.slf4j.Logger) a distinct name. i.e.
  *     _com.github.lawkai.jdbc4k.$name_ if set. Otherwise, the logger
  *     will be named as _com.github.lawkai.jdbc4k.DataSource4k_.
@@ -48,17 +47,14 @@ class DataSource4k(private val dataSource: DataSource, parallelFactor: Int, name
     private val limitedIOContext = Dispatchers.IO.limitedParallelism(parallelFactor)
 
     /**
-     * Starts a database transaction by setting [autoCommit](java.sql.Connection.setAutoCommit) to
-     * `false` and put into the [CoroutineContext](kotlin.coroutines.CoroutineContext). Any [query] runs
-     * within the transaction will reference to the same [Connection](java.sql.Connection) from the
-     * [CoroutineContext](kotlin.coroutines.CoroutineContext). If no exception happened within the [fn] block, it
-     * will call [commit](java.sql.Connection.commit) else it will [rollback](java.sql.Connection.rollback) the whole
-     * transaction.
+     * Starts a database transaction by setting [autoCommit](java.sql.Connection.setAutoCommit) to `false` and
+     * put into the [CoroutineContext]. Any [query] runs within the transaction will reference to the same
+     * [Connection] from the [CoroutineContext]. If no exception happened within the [fn] block, it will call
+     * [commit](java.sql.Connection.commit) else it will [rollback](java.sql.Connection.rollback) the whole transaction.
      *
      * Nested [transaction] will commit or rollback together with the parent [transaction]
      *
-     * A [MDC](org.slf4j.MDC) _db_connection_ is provided to help _debug_ which [Connection](java.sql.Connection) is
-     * being used when running [fn].
+     * A [MDC] _db_connection_ is provided to help _debug_ which [Connection] is being used when running [fn].
      *
      * **Cautions:** calling [CoroutineScope](kotlinx.coroutines.CoroutineScope) `launch` or `async` within the [fn] is
      * not recommended unless you know what you are doing.
@@ -92,23 +88,23 @@ class DataSource4k(private val dataSource: DataSource, parallelFactor: Int, name
     }
 
     /**
-     * Runs a query with a [Connection](java.sql.Connection) given by the [DataSource](javax.sql.DataSource) or from the
-     * [CoroutineContext](kotlin.coroutines.CoroutineContext) so that it can be tied to the same [transaction]
+     * Runs a query with a [Connection] given by the [DataSource] or from the [CoroutineContext] so that it can be
+     * associated to the same [transaction].
      *
-     * A [MDC](org.slf4j.MDC) _db_connection_ is provided to help _debug_ which [Connection](java.sql.Connection) is
-     * being used when running [fn].
+     * A [MDC] _db_connection_ is provided to help _debug_ which [Connection] is being used when running [fn].
      *
-     * @param fn SQL query to run
+     * @param sql sql statement for the [fn] [PreparedStatement]
+     * @param fn function with [PreparedStatement] and returns anything.
      * @return whatever [fn] returns
      */
-    suspend fun <T> query(fn: suspend (Connection) -> T): T {
+    suspend fun <T> query(sql: String, fn: suspend (PreparedStatement) -> T): T {
         return coroutineContext.connection?.let { conn ->
             MDC.putCloseable("db_connection", conn.toString()).use {
-                fn(conn) // purposely not use `use` to auto close the connection
+                fn(conn.prepareStatement(sql)) // purposely not use `use` to auto close the connection
             }
         } ?: dataSource.connection.use { conn ->
             MDC.putCloseable("db_connection", conn.toString()).use {
-                fn(conn)
+                fn(conn.prepareStatement(sql))
             }
         }
     }
