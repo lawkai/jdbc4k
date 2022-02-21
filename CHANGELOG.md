@@ -1,5 +1,12 @@
 # Changelog
 
+# [1.0.0-beta.7](https://github.com/lawkai/jdbc4k/compare/v1.0.0-beta.6...v1.0.0-beta.7) (2022-02-21)
+
+
+### Bug Fixes
+
+* adding scm section in maven pom ([a26739f](https://github.com/lawkai/jdbc4k/commit/a26739f98f6f613855d63b71cc9d5114e227bfdc))
+
 # [1.0.0-beta.6](https://github.com/lawkai/jdbc4k/compare/v1.0.0-beta.5...v1.0.0-beta.6) (2022-02-21)
 
 
