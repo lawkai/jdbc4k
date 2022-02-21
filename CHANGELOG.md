@@ -1,5 +1,12 @@
 # Changelog
 
+# [1.0.0-beta.5](https://github.com/lawkai/jdbc4k/compare/v1.0.0-beta.4...v1.0.0-beta.5) (2022-02-21)
+
+
+### Bug Fixes
+
+* publish credentials ([9b0736c](https://github.com/lawkai/jdbc4k/commit/9b0736c41ace2680bd8ac98b26857cdd4a81bd83))
+
 # [1.0.0-beta.4](https://github.com/lawkai/jdbc4k/compare/v1.0.0-beta.3...v1.0.0-beta.4) (2022-02-21)
 
 
