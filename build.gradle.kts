@@ -2,11 +2,14 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.6.10"
+    id("org.jetbrains.dokka") version "1.6.10"
     id("com.gorylenko.gradle-git-properties") version "2.3.1"
     id("com.diffplug.spotless") version "6.2.1"
+    `maven-publish`
+    signing
 }
 
-group = "com.github.lawkai"
+group = "io.github.lawkai"
 
 repositories {
     mavenCentral()
@@ -76,3 +79,94 @@ spotless {
 }
 
 gitProperties { customProperties.put("project.name", project.name) }
+
+val sourcesJar by tasks.creating(Jar::class) {
+    archiveClassifier.set("sources")
+    from(sourceSets.main.get().allSource)
+}
+
+tasks.dokkaHtml {
+    outputDirectory.set(buildDir.resolve("javadoc"))
+}
+
+val javadocJar by tasks.creating(Jar::class) {
+    archiveClassifier.set("javadoc")
+    from(tasks.dokkaHtml)
+}
+
+artifacts {
+    archives(sourcesJar)
+    archives(javadocJar)
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenArtifacts") {
+            from(components["kotlin"])
+            artifact(sourcesJar)
+            artifact(javadocJar)
+
+            versionMapping {
+                usage("java-api") {
+                    fromResolutionOf("runtimeClasspath")
+                }
+                usage("java-runtime") {
+                    fromResolutionResult()
+                }
+            }
+
+            pom {
+                name.set("JDBC4k")
+                description.set("A simple Kotlin Library that provides suspendable JDBC transaction and query.")
+                url.set("https://github.com/lawkai/jdbc4k")
+
+                licenses {
+                    license {
+                        name.set("MIT License")
+                        url.set("https://mit-license.org/")
+                    }
+                }
+
+                developers {
+                    developer {
+                        id.set("lawkai")
+                        name.set("Kelvin Law")
+                    }
+                }
+            }
+        }
+
+        repositories {
+            maven {
+                val stagingUrl = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+                val snapshotUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+
+                url = if (version.toString().contains("SNAPSHOT")) snapshotUrl else stagingUrl
+                credentials {
+                    username = listOf(
+                        project.properties["ossrh.username"]?.toString(),
+                        System.getenv("OSSRH_USERNAME")?.toString()
+                    ).firstOrNull()
+                    password = listOf(
+                        project.properties["ossrh.password"]?.toString(),
+                        System.getenv("OSSRH_PASSWORD")?.toString()
+                    ).firstOrNull()
+                }
+            }
+        }
+    }
+}
+
+signing {
+    val signingKey: String? by project
+    val signingPassword: String? by project
+    val signingKeyId: String? by project
+    if (signingKey != null && signingPassword != null) {
+        if (signingKeyId != null) {
+            useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+        } else {
+            useInMemoryPgpKeys(signingKey, signingPassword)
+        }
+    }
+    sign(publishing.publications["mavenArtifacts"])
+}

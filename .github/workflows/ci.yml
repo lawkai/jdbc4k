@@ -45,7 +45,7 @@ jobs:
         with:
           java-version: 11
           distribution: 'adopt'
-      - name: Run gradle assemble
+      - name: Run gradle publish
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: assemble
+          arguments: publish
