@@ -1,5 +1,12 @@
 # Changelog
 
+# [1.0.0-beta.4](https://github.com/lawkai/jdbc4k/compare/v1.0.0-beta.3...v1.0.0-beta.4) (2022-02-21)
+
+
+### Bug Fixes
+
+* signing artifact with proper env. variables ([992ff9d](https://github.com/lawkai/jdbc4k/commit/992ff9dcfe7d5952be43835890b14ff7799af070))
+
 # [1.0.0-beta.3](https://github.com/lawkai/jdbc4k/compare/v1.0.0-beta.2...v1.0.0-beta.3) (2022-02-21)
 
 
