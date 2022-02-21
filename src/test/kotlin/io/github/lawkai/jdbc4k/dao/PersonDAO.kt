@@ -1,10 +1,10 @@
-package com.github.lawkai.jdbc4k.dao
+package io.github.lawkai.jdbc4k.dao
 
-import com.github.lawkai.jdbc4k.DataSource4k
-import com.github.lawkai.jdbc4k.domain.Person
-import com.github.lawkai.jdbc4k.executeListQuery
-import com.github.lawkai.jdbc4k.executeQuery
-import com.github.lawkai.jdbc4k.executeSequenceQuery
+import io.github.lawkai.jdbc4k.DataSource4k
+import io.github.lawkai.jdbc4k.domain.Person
+import io.github.lawkai.jdbc4k.executeListQuery
+import io.github.lawkai.jdbc4k.executeQuery
+import io.github.lawkai.jdbc4k.executeSequenceQuery
 import org.slf4j.LoggerFactory
 
 class PersonDAO(private val db: DataSource4k) {

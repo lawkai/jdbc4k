@@ -1,4 +1,4 @@
-package com.github.lawkai.jdbc4k
+package io.github.lawkai.jdbc4k
 
 import java.sql.PreparedStatement
 import java.sql.ResultSet
