@@ -146,11 +146,11 @@ publishing {
                     username = listOf(
                         project.properties["ossrh.username"]?.toString(),
                         System.getenv("OSSRH_USERNAME")?.toString(),
-                    ).firstOrNull()
+                    ).filterNotNull().firstOrNull()
                     password = listOf(
                         project.properties["ossrh.password"]?.toString(),
                         System.getenv("OSSRH_PASSWORD")?.toString(),
-                    ).firstOrNull()
+                    ).filterNotNull().firstOrNull()
                 }
             }
         }
