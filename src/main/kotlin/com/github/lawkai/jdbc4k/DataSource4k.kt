@@ -62,7 +62,7 @@ class DataSource4k(private val dataSource: DataSource, parallelFactor: Int, name
      * @param fn function to be run within the transaction block.
      * @return whatever [fn] returns
      */
-    suspend fun <T> transaction(fn: suspend (Connection) -> T): T {
+    suspend fun <T> transaction(fn: suspend () -> T): T {
         return coroutineScope {
             when (val connection = coroutineContext.connection) {
                 null -> {
@@ -71,7 +71,7 @@ class DataSource4k(private val dataSource: DataSource, parallelFactor: Int, name
                     val connectionContext = ConnectionContext(conn)
                     val result = async(limitedIOContext + connectionContext) {
                         MDC.putCloseable("db_connection", conn.toString()).use {
-                            fn(coroutineContext.connection!!)
+                            fn()
                         }
                     }
                     result.commitOrRollback(conn)
@@ -80,7 +80,7 @@ class DataSource4k(private val dataSource: DataSource, parallelFactor: Int, name
                 else -> {
                     // for nested transaction
                     MDC.putCloseable("db_connection", connection.toString()).use {
-                        fn(connection)
+                        fn()
                     }
                 }
             }
