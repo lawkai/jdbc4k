@@ -127,6 +127,12 @@ publishing {
                     }
                 }
 
+                scm {
+                    connection.set("scm:git:git@github.com:lawkai/jdbc4k.git")
+                    developerConnection.set("scm:git:git@github.com:lawkai/jdbc4k.git")
+                    url.set("https://github.com/lawkai/jdbc4k")
+                }
+
                 developers {
                     developer {
                         id.set("lawkai")
