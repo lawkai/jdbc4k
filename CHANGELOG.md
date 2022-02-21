@@ -1,5 +1,12 @@
 # Changelog
 
+# [1.0.0-beta.6](https://github.com/lawkai/jdbc4k/compare/v1.0.0-beta.5...v1.0.0-beta.6) (2022-02-21)
+
+
+### Bug Fixes
+
+* make sure it if build and publish on the tag ([cfd24cb](https://github.com/lawkai/jdbc4k/commit/cfd24cb8ce081d551f1338d173789b35c06c94f2))
+
 # [1.0.0-beta.5](https://github.com/lawkai/jdbc4k/compare/v1.0.0-beta.4...v1.0.0-beta.5) (2022-02-21)
 
 
