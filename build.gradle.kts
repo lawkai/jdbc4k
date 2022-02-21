@@ -145,11 +145,11 @@ publishing {
                 credentials {
                     username = listOf(
                         project.properties["ossrh.username"]?.toString(),
-                        System.getenv("OSSRH_USERNAME")?.toString()
+                        System.getenv("OSSRH_USERNAME")?.toString(),
                     ).firstOrNull()
                     password = listOf(
                         project.properties["ossrh.password"]?.toString(),
-                        System.getenv("OSSRH_PASSWORD")?.toString()
+                        System.getenv("OSSRH_PASSWORD")?.toString(),
                     ).firstOrNull()
                 }
             }
@@ -166,16 +166,8 @@ signing {
         project.properties["signing.password"]?.toString(),
         System.getenv("ORG_GRADLE_PROJECT_SIGNINGPASSWORD")?.toString(),
     ).firstOrNull()
-    val signingKeyId: String? = listOf(
-        project.properties["signing.keyId"]?.toString(),
-        System.getenv("ORG_GRADLE_PROJECT_SIGNINGKEYID")?.toString(),
-    ).firstOrNull()
     if (signingKey != null && signingPassword != null) {
-        if (signingKeyId != null) {
-            useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
-        } else {
-            useInMemoryPgpKeys(signingKey, signingPassword)
-        }
+        useInMemoryPgpKeys(signingKey, signingPassword)
     }
     sign(publishing.publications["mavenArtifacts"])
 }
