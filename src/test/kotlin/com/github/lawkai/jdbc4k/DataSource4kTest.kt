@@ -1,7 +1,7 @@
 package com.github.lawkai.jdbc4k
 
+import com.github.lawkai.jdbc4k.dao.PersonDAO
 import com.github.lawkai.jdbc4k.domain.Person
-import com.github.lawkai.jdbc4k.domain.PersonDAO
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import kotlinx.coroutines.joinAll

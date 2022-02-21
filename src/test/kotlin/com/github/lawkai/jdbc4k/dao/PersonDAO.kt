@@ -1,6 +1,7 @@
-package com.github.lawkai.jdbc4k.domain
+package com.github.lawkai.jdbc4k.dao
 
 import com.github.lawkai.jdbc4k.DataSource4k
+import com.github.lawkai.jdbc4k.domain.Person
 import com.github.lawkai.jdbc4k.executeListQuery
 import com.github.lawkai.jdbc4k.executeQuery
 import com.github.lawkai.jdbc4k.executeSequenceQuery
