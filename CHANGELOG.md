@@ -1,5 +1,12 @@
 # Changelog
 
+# [1.0.0-beta.2](https://github.com/lawkai/jdbc4k/compare/v1.0.0-beta.1...v1.0.0-beta.2) (2022-02-21)
+
+
+### Bug Fixes
+
+* renamed package to io.github.lawkai instead of com.github.lawkai ([8a4199a](https://github.com/lawkai/jdbc4k/commit/8a4199a6622065397c20fc3d1a3bac366e29bb6c))
+
 # 1.0.0-beta.1 (2022-02-21)
 
 
