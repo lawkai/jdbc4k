@@ -40,6 +40,8 @@ jobs:
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v2
+        with:
+          ref: v${{ needs.verify.outputs.new_release_version }}
       - name: Setup OpenJDK
         uses: actions/setup-java@v2
         with:
