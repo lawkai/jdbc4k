@@ -43,7 +43,8 @@ dependencies {
     testRuntimeOnly("ch.qos.logback:logback-classic:$logback_version")
 
     testImplementation("com.zaxxer:HikariCP:$hikari_version")
-    testImplementation("org.hsqldb:hsqldb:$hsqldb_version")
+    testRuntimeOnly("org.hsqldb:hsqldb:$hsqldb_version")
+    testRuntimeOnly("mysql:mysql-connector-java:8.0.20")
 
     testImplementation("org.hamcrest:hamcrest:$hamkrest_version")
 }

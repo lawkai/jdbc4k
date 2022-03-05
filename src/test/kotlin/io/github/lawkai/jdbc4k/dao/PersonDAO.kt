@@ -4,7 +4,8 @@ import io.github.lawkai.jdbc4k.DataSource4k
 import io.github.lawkai.jdbc4k.domain.Person
 import io.github.lawkai.jdbc4k.executeListQuery
 import io.github.lawkai.jdbc4k.executeQuery
-import io.github.lawkai.jdbc4k.executeSequenceQuery
+import io.github.lawkai.jdbc4k.getStringNullAsEmpty
+import kotlinx.coroutines.flow.Flow
 import org.slf4j.LoggerFactory
 
 class PersonDAO(private val db: DataSource4k) {
@@ -33,20 +34,18 @@ class PersonDAO(private val db: DataSource4k) {
             logger.debug("select all persons")
             ps.executeListQuery { rs ->
                 Person(
-                    rs.getString("first_name"),
-                    rs.getString("last_name"),
+                    rs.getStringNullAsEmpty("first_name"),
+                    rs.getStringNullAsEmpty("last_name"),
                 )
             }
         }
 
-    suspend fun loadAllPersonsAsSequence(): Sequence<Person> =
-        db.query("SELECT * FROM Person") { ps ->
+    fun loadAllPersonsAsSequence(): Flow<Person> =
+        db.flowQuery("SELECT * FROM Person") { rs ->
             logger.debug("select all persons with sequence")
-            ps.executeSequenceQuery { rs ->
-                Person(
-                    rs.getString("first_name"),
-                    rs.getString("last_name"),
-                )
-            }
+            Person(
+                rs.getStringNullAsEmpty("first_name"),
+                rs.getStringNullAsEmpty("last_name"),
+            )
         }
 }

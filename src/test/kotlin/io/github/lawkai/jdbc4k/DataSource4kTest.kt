@@ -4,6 +4,10 @@ import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import io.github.lawkai.jdbc4k.dao.PersonDAO
 import io.github.lawkai.jdbc4k.domain.Person
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -132,6 +136,7 @@ internal class DataSource4kTest {
         val count = 100
         assertThrows<IllegalStateException> {
             runBlocking {
+                val main = this
                 db.transaction {
                     IntRange(1, count).map { i ->
                         personDAO.insert(Person("Donald_$i", "Trump"))
@@ -139,7 +144,7 @@ internal class DataSource4kTest {
 
                     // this will be run in a different scope of the transaction.
                     // Thus, each `insert` is actually running on a new connection.
-                    launch {
+                    main.launch {
                         IntRange(1, count).map { i ->
                             if (i == count) {
                                 error("bom!")

@@ -5,11 +5,12 @@
 
     <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{ISO8601} [%t%X{db_connection}] %highlight(%-5level) %cyan(%-16c{16}): %msg%n%throwable</pattern>
+            <pattern>%d{ISO8601} [%t %X{db_connection}] %highlight(%-5level) %cyan(%-16c{16}): %msg%n%throwable
+            </pattern>
         </encoder>
     </appender>
 
-    <logger name="com.github.lawkai.jdbc4k" level="DEBUG"/>
+    <logger name="io.github.lawkai.jdbc4k" level="DEBUG"/>
 
     <root level="info">
         <appender-ref ref="stdout"/>

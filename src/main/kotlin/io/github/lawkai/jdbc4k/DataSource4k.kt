@@ -1,14 +1,19 @@
 package io.github.lawkai.jdbc4k
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.yield
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import java.sql.Connection
 import java.sql.PreparedStatement
+import java.sql.ResultSet
 import javax.sql.DataSource
 import kotlin.coroutines.AbstractCoroutineContextElement
 import kotlin.coroutines.CoroutineContext
@@ -62,7 +67,7 @@ class DataSource4k(private val dataSource: DataSource, parallelFactor: Int, name
      * @param fn function to be run within the transaction block.
      * @return whatever [fn] returns
      */
-    suspend fun <T> transaction(fn: suspend () -> T): T {
+    suspend fun <T> transaction(fn: suspend CoroutineScope.() -> T): T {
         return coroutineScope {
             when (val connection = coroutineContext.connection) {
                 null -> {
@@ -106,6 +111,29 @@ class DataSource4k(private val dataSource: DataSource, parallelFactor: Int, name
             MDC.putCloseable("db_connection", conn.toString()).use {
                 fn(conn.prepareStatement(sql))
             }
+        }
+    }
+
+    /**
+     * Construct a [Flow] for the given [sql]. The [sql] has to be `readOnly` (i.e. select statement) Please note that
+     * the [Connection] used to construct the [Flow] will be closed when the [Flow] terminate.
+     *
+     * @param sql SQL to run (has to be SELECT statement)
+     * @param fn function that takes a [ResultSet] to construct an object [T]
+     * @return a [Flow] of type [T]
+     */
+    fun <T> flowQuery(sql: String, fn: (rs: ResultSet) -> T): Flow<T> = flow {
+        dataSource.connection.use { conn ->
+            conn.isReadOnly = true
+            conn.prepareStatement(sql).use { ps ->
+                ps.executeQuery().use { rs ->
+                    while (rs.next()) {
+                        this.emit(fn(rs))
+                        yield()
+                    }
+                }
+            }
+            conn.isReadOnly = false
         }
     }
 
