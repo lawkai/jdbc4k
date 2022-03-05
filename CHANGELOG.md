@@ -1,5 +1,12 @@
 # Changelog
 
+# [1.2.0](https://github.com/lawkai/jdbc4k/compare/v1.1.0...v1.2.0) (2022-03-05)
+
+
+### Features
+
+* removed PreparedStatement and ResultSet extension functions, created wrapper class instead. ([53f3dc7](https://github.com/lawkai/jdbc4k/commit/53f3dc72d0ad4da604696c7579a1e0adcf57356b))
+
 # [1.1.0](https://github.com/lawkai/jdbc4k/compare/v1.0.0...v1.1.0) (2022-03-05)
 
 
