@@ -1,5 +1,12 @@
 # Changelog
 
+# [1.1.0](https://github.com/lawkai/jdbc4k/compare/v1.0.0...v1.1.0) (2022-03-05)
+
+
+### Features
+
+* transaction lambda can be run using the same CoroutineScope. ([2fb2eff](https://github.com/lawkai/jdbc4k/commit/2fb2eff276545446ca7b02262c7e3dd02a29e023))
+
 # 1.0.0 (2022-02-21)
 
 
