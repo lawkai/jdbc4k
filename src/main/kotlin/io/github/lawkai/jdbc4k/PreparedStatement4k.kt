@@ -136,8 +136,12 @@ class PreparedStatement4k(private val ps: PreparedStatement) : PreparedStatement
                 if (!rs.next()) {
                     null
                 } else {
-                    fn(ResultSet4k(rs))
+                    fn(rs)
                 }
             }.toList()
         }
+
+    override fun executeQuery(): ResultSet4k {
+        return ResultSet4k(ps.executeQuery())
+    }
 }
