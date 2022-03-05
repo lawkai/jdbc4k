@@ -25,7 +25,14 @@ internal class DataSource4kTest {
     fun setUp() {
         dataSource.connection.use {
             it.prepareStatement("DROP TABLE IF EXISTS person").executeUpdate()
-            it.prepareStatement("CREATE TABLE Person(first_name VARCHAR(255), last_name VARCHAR(255))").executeUpdate()
+            it.prepareStatement(
+                """
+                CREATE TABLE Person(
+                    first_name VARCHAR(255),
+                    last_name VARCHAR(255)
+                )
+                """.trimIndent(),
+            ).executeUpdate()
         }
     }
 

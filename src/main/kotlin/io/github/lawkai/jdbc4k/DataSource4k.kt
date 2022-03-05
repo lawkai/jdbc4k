@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import java.sql.Connection
 import java.sql.PreparedStatement
-import java.sql.ResultSet
 import javax.sql.DataSource
 import kotlin.coroutines.AbstractCoroutineContextElement
 import kotlin.coroutines.CoroutineContext
@@ -102,14 +101,15 @@ class DataSource4k(private val dataSource: DataSource, parallelFactor: Int, name
      * @param fn function with [PreparedStatement] and returns anything.
      * @return whatever [fn] returns
      */
-    suspend fun <T> query(sql: String, fn: suspend (PreparedStatement) -> T): T {
+    suspend fun <T> query(sql: String, fn: suspend (PreparedStatement4k) -> T): T {
         return coroutineContext.connection?.let { conn ->
             MDC.putCloseable("db_connection", conn.toString()).use {
-                fn(conn.prepareStatement(sql)) // purposely not use `use` to auto close the connection
+                // purposely not use `use` to auto close the connection
+                fn(PreparedStatement4k(conn.prepareStatement(sql)))
             }
         } ?: dataSource.connection.use { conn ->
             MDC.putCloseable("db_connection", conn.toString()).use {
-                fn(conn.prepareStatement(sql))
+                fn(PreparedStatement4k(conn.prepareStatement(sql)))
             }
         }
     }
@@ -119,16 +119,16 @@ class DataSource4k(private val dataSource: DataSource, parallelFactor: Int, name
      * the [Connection] used to construct the [Flow] will be closed when the [Flow] terminate.
      *
      * @param sql SQL to run (has to be SELECT statement)
-     * @param fn function that takes a [ResultSet] to construct an object [T]
+     * @param fn function that takes a [ResultSet4k] to construct an object [T]
      * @return a [Flow] of type [T]
      */
-    fun <T> flowQuery(sql: String, fn: (rs: ResultSet) -> T): Flow<T> = flow {
+    fun <T> flowQuery(sql: String, fn: (rs: ResultSet4k) -> T): Flow<T> = flow {
         dataSource.connection.use { conn ->
             conn.isReadOnly = true
             conn.prepareStatement(sql).use { ps ->
                 ps.executeQuery().use { rs ->
                     while (rs.next()) {
-                        this.emit(fn(rs))
+                        this.emit(fn(ResultSet4k(rs)))
                         yield()
                     }
                 }
