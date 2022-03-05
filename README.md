@@ -6,7 +6,7 @@ JDBC4K
 It is a small library written in Kotlin (JVM) that allows Coroutines to be run within the same Database transaction.
 
 It is NOT an ORM library like [Hibernate](https://hibernate.org) or [Exposed](https://github.com/JetBrains/Exposed), but
-it does provide some useful extension functions when working with `java.sql.PreparedStatement` and `java.sql.ResultSet`.
+it does provide some useful functions when working with `java.sql.PreparedStatement` and `java.sql.ResultSet`.
 
 The idea of this library is that you as a developer have full control of what SQL to run and how the object should be
 mapped without relying on any MAGIC to happen.
