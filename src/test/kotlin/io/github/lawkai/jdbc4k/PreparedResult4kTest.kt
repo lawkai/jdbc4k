@@ -97,6 +97,7 @@ internal class PreparedResult4kTest {
         val rs = db.query("SELECT * FROM NULL_TABLE WHERE uuid='1'") { ps ->
             ps.executeQuery {
                 mapOf<String, Any?>(
+                    "uuid" to it.getString("uuid"),
                     "nullable_string" to it.getStringNullable("nullable_string"),
                     "nullable_short" to it.getShortNullable("nullable_short"),
                     "nullable_int" to it.getIntNullable("nullable_int"),
@@ -106,12 +107,13 @@ internal class PreparedResult4kTest {
                     "nullable_big_decimal" to it.getBigDecimalNullable("nullable_big_decimal"),
                     "nullable_boolean" to it.getBooleanNullable("nullable_boolean"),
                     "nullable_timestamp" to it.getInstantNullable("nullable_timestamp"),
-                    "nullable_byte" to it.getInstantNullable("nullable_byte"),
-                    "nullable_bytes" to it.getInstantNullable("nullable_bytes"),
+                    "nullable_byte" to it.getByteNullable("nullable_byte"),
+                    "nullable_bytes" to it.getBytesNullable("nullable_bytes"),
                 )
             }
         }
         assertNotNull(rs)
+        assertEquals("1", rs["uuid"])
         assertNull("nullable_string is not null", rs["nullable_string"])
         assertNull("nullable_short is not null", rs["nullable_short"])
         assertNull("nullable_int is not null", rs["nullable_int"])
@@ -136,6 +138,7 @@ internal class PreparedResult4kTest {
         val rs = db.query("SELECT * FROM NULL_TABLE WHERE uuid = '1'") { ps ->
             ps.executeQuery {
                 mapOf<String, Any?>(
+                    "uuid" to it.getString("uuid"),
                     "nullable_string" to it.getStringNullable("nullable_string"),
                     "nullable_short" to it.getShortNullable("nullable_short"),
                     "nullable_int" to it.getIntNullable("nullable_int"),
@@ -151,6 +154,7 @@ internal class PreparedResult4kTest {
             }
         }
         assertNotNull(rs)
+        assertEquals("1", rs["uuid"])
         assertEquals("someString", rs["nullable_string"])
         assertEquals(1.toShort(), rs["nullable_short"])
         assertEquals(Int.MAX_VALUE, rs["nullable_int"])
