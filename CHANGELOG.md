@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/lawkai/jdbc4k/compare/v1.2.0...v1.2.1) (2022-03-05)
+
+
+### Bug Fixes
+
+* PreparedStatement4k#executeQuery should return a ResultSet4k instead of ResultSet ([7aa5cf5](https://github.com/lawkai/jdbc4k/commit/7aa5cf5ae67a4cea824c79731eae351162a81714))
+
 # [1.2.0](https://github.com/lawkai/jdbc4k/compare/v1.1.0...v1.2.0) (2022-03-05)
 
 
