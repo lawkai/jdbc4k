@@ -68,24 +68,33 @@ internal class PreparedResult4kTest {
                 nullable_byte,
                 nullable_bytes
             ) VALUES (
-                ?, ?, ?, ?, ?,
-                ?, ?, ?, ?, ?,
-                ?, ?
+                :uuid,
+                :nullableString,
+                :nullableShort,
+                :nullableInt,
+                :nullableLong,
+                :nullableFloat,
+                :nullableDouble,
+                :nullableBigDecimal,
+                :nullableBoolean,
+                :nullableInstant,
+                :nullableByte,
+                :nullableBytes
             )
             """.trimIndent(),
         ) { ps ->
-            ps.setString(1, uuid)
-            ps.setStringNullable(2, nullableString)
-            ps.setShortNullable(3, nullableShort)
-            ps.setIntNullable(4, nullableInt)
-            ps.setLongNullable(5, nullableLong)
-            ps.setFloatNullable(6, nullableFloat)
-            ps.setDoubleNullable(7, nullableDouble)
-            ps.setBigDecimalNullable(8, nullableBigDecimal)
-            ps.setBooleanNullable(9, nullableBoolean)
-            ps.setInstantNullable(10, nullableTimestamp)
-            ps.setByteNullable(11, nullableByte)
-            ps.setBytesNullable(12, nullableByteArray)
+            ps.setString("uuid", uuid)
+            ps.setStringNullable("nullableString", nullableString)
+            ps.setShortNullable("nullableShort", nullableShort)
+            ps.setIntNullable("nullableInt", nullableInt)
+            ps.setLongNullable("nullableLong", nullableLong)
+            ps.setFloatNullable("nullableFloat", nullableFloat)
+            ps.setDoubleNullable("nullableDouble", nullableDouble)
+            ps.setBigDecimalNullable("nullableBigDecimal", nullableBigDecimal)
+            ps.setBooleanNullable("nullableBoolean", nullableBoolean)
+            ps.setInstantNullable("nullableInstant", nullableTimestamp)
+            ps.setByteNullable("nullableByte", nullableByte)
+            ps.setBytesNullable("nullableBytes", nullableByteArray)
             ps.executeUpdate()
         }
     }

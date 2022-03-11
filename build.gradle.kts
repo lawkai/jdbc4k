@@ -24,7 +24,7 @@ val slf4j_version = "1.7.36"
 val logback_version = "1.2.10"
 val hikari_version = "5.0.1"
 val hsqldb_version = "2.6.1"
-val hamkrest_version = "2.2"
+val hamkrest_version = "1.8.0.1"
 
 dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
@@ -46,7 +46,7 @@ dependencies {
     testRuntimeOnly("org.hsqldb:hsqldb:$hsqldb_version")
     testRuntimeOnly("mysql:mysql-connector-java:8.0.20")
 
-    testImplementation("org.hamcrest:hamcrest:$hamkrest_version")
+    testImplementation("com.natpryce:hamkrest:$hamkrest_version")
 }
 
 tasks.test {

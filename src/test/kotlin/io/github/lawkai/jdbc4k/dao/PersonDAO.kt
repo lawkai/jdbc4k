@@ -9,11 +9,11 @@ class PersonDAO(private val db: DataSource4k) {
     private val logger = LoggerFactory.getLogger(PersonDAO::class.java)
 
     suspend fun insert(person: Person) =
-        db.query("INSERT INTO Person(first_name, last_name) VALUES (?, ?)") { ps ->
+        db.query("INSERT INTO Person(first_name, last_name) VALUES (:first_name, :last_name)") { ps ->
             logger.debug("inserting $person")
             ps.apply {
-                setString(1, person.firstName)
-                setString(2, person.lastName)
+                setString("first_name", person.firstName)
+                setString("last_name", person.lastName)
             }.executeUpdate()
             person
         }

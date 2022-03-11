@@ -12,7 +12,6 @@ import kotlinx.coroutines.yield
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import java.sql.Connection
-import java.sql.PreparedStatement
 import javax.sql.DataSource
 import kotlin.coroutines.AbstractCoroutineContextElement
 import kotlin.coroutines.CoroutineContext
@@ -97,19 +96,20 @@ class DataSource4k(private val dataSource: DataSource, parallelFactor: Int, name
      *
      * A [MDC] _db_connection_ is provided to help _debug_ which [Connection] is being used when running [fn].
      *
-     * @param sql sql statement for the [fn] [PreparedStatement]
-     * @param fn function with [PreparedStatement] and returns anything.
+     * @param sql sql statement for the [fn].
+     * @param fn function with [IPreparedStatement4k] and returns anything.
      * @return whatever [fn] returns
      */
-    suspend fun <T> query(sql: String, fn: suspend (PreparedStatement4k) -> T): T {
+    suspend fun <T> query(sql: String, fn: suspend (IPreparedStatement4k) -> T): T {
+        val namedParameterSql = NamedParameterSql(sql)
         return coroutineContext.connection?.let { conn ->
             MDC.putCloseable("db_connection", conn.toString()).use {
                 // purposely not use `use` to auto close the connection
-                fn(PreparedStatement4k(conn.prepareStatement(sql)))
+                fn(PreparedStatement4k(namedParameterSql, conn.prepareStatement(namedParameterSql.rawSql)))
             }
         } ?: dataSource.connection.use { conn ->
             MDC.putCloseable("db_connection", conn.toString()).use {
-                fn(PreparedStatement4k(conn.prepareStatement(sql)))
+                fn(PreparedStatement4k(namedParameterSql, conn.prepareStatement(namedParameterSql.rawSql)))
             }
         }
     }
@@ -119,10 +119,10 @@ class DataSource4k(private val dataSource: DataSource, parallelFactor: Int, name
      * the [Connection] used to construct the [Flow] will be closed when the [Flow] terminate.
      *
      * @param sql SQL to run (has to be SELECT statement)
-     * @param fn function that takes a [ResultSet4k] to construct an object [T]
+     * @param fn function that takes a [IResultSet4k] to construct an object [T]
      * @return a [Flow] of type [T]
      */
-    fun <T> flowQuery(sql: String, fn: (rs: ResultSet4k) -> T): Flow<T> = flow {
+    fun <T> flowQuery(sql: String, fn: (rs: IResultSet4k) -> T): Flow<T> = flow {
         dataSource.connection.use { conn ->
             conn.isReadOnly = true
             conn.prepareStatement(sql).use { ps ->
