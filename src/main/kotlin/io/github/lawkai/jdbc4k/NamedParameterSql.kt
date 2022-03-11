@@ -1,7 +1,7 @@
 package io.github.lawkai.jdbc4k
 
 internal class NamedParameterSql(sql: String) {
-    private val parameterRegex = Regex(":\\w*")
+    private val parameterRegex = Regex(":\\w+")
     private val parameters = parameterRegex
         .findAll(sql)
         .mapIndexed { i, m -> Pair(i + 1, m.value.substring(1)) }
