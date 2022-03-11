@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/lawkai/jdbc4k/compare/v1.3.0...v1.3.1) (2022-03-11)
+
+
+### Bug Fixes
+
+* NamedParameterSql Regex to use + instead of * when matching parameters started with colon(:) ([787aeeb](https://github.com/lawkai/jdbc4k/commit/787aeebc44fb5634f18d37740dea9b8806a939fe))
+
 # [1.3.0](https://github.com/lawkai/jdbc4k/compare/v1.2.1...v1.3.0) (2022-03-11)
 
 
