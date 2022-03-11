@@ -1,5 +1,12 @@
 # Changelog
 
+# [1.3.0](https://github.com/lawkai/jdbc4k/compare/v1.2.1...v1.3.0) (2022-03-11)
+
+
+### Features
+
+* added support for named parameter sql. ([2740e73](https://github.com/lawkai/jdbc4k/commit/2740e73af0eb0c2dcfad8262cafbdd30c05feb52))
+
 ## [1.2.1](https://github.com/lawkai/jdbc4k/compare/v1.2.0...v1.2.1) (2022-03-05)
 
 
