@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.2](https://github.com/lawkai/jdbc4k/compare/v1.3.1...v1.3.2) (2022-04-15)
+
+
+### Bug Fixes
+
+* update to use OptIn annotation ([54d1377](https://github.com/lawkai/jdbc4k/commit/54d1377bcee8a9c689375f3fffb9d0320bc170e5))
+
 ## [1.3.1](https://github.com/lawkai/jdbc4k/compare/v1.3.0...v1.3.1) (2022-03-11)
 
 
