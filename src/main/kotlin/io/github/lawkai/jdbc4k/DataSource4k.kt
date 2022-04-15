@@ -40,13 +40,14 @@ import kotlin.coroutines.coroutineContext
  *     _com.github.lawkai.jdbc4k.$name_ if set. Otherwise, the logger
  *     will be named as _com.github.lawkai.jdbc4k.DataSource4k_.
  */
-@ExperimentalCoroutinesApi
 class DataSource4k(private val dataSource: DataSource, parallelFactor: Int, name: String? = null) {
     private val logger = LoggerFactory.getLogger(
         name?.let {
             "${DataSource4k::class.java.packageName}.$it"
         } ?: DataSource4k::class.java.name,
     )
+
+    @OptIn(ExperimentalCoroutinesApi::class)
     private val limitedIOContext = Dispatchers.IO.limitedParallelism(parallelFactor)
 
     /**

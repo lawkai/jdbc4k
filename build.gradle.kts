@@ -15,13 +15,9 @@ repositories {
     mavenCentral()
 }
 
-kotlin.sourceSets.test {
-    languageSettings.optIn("kotlinx.coroutines.ExperimentalCoroutinesApi")
-}
-
 val kotlinx_version = "1.6.0"
 val slf4j_version = "1.7.36"
-val logback_version = "1.2.10"
+val logback_version = "1.2.11"
 val hikari_version = "5.0.1"
 val hsqldb_version = "2.6.1"
 val hamkrest_version = "1.8.0.1"
@@ -44,7 +40,7 @@ dependencies {
 
     testImplementation("com.zaxxer:HikariCP:$hikari_version")
     testRuntimeOnly("org.hsqldb:hsqldb:$hsqldb_version")
-    testRuntimeOnly("mysql:mysql-connector-java:8.0.20")
+    testRuntimeOnly("mysql:mysql-connector-java:8.0.28")
 
     testImplementation("com.natpryce:hamkrest:$hamkrest_version")
 }
@@ -55,6 +51,7 @@ tasks.test {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "11"
+    kotlinOptions.freeCompilerArgs = listOf("-Xopt-in=kotlin.RequiresOptIn")
 }
 
 spotless {
